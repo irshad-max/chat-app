@@ -359,9 +359,9 @@ app.post("/verify-email", auth, async (req, res) => {
 app.post("/write-notes", auth, async (req, res) => {
   const { notes } = req.body;
   try {
-    const note = await User.findOne({ _id: req.userid }).updateOne({
-      notes: notes,
-    });
+    const note = await User.findOne({ _id: req.userid })
+    note.notes = notes;
+    await note.save();
     res.status(200).json({ message: "Note created successfully", note });
   } catch (e) {
     res.status(500).json({ error: "Note creation failed" });
@@ -371,20 +371,56 @@ app.post("/write-notes", auth, async (req, res) => {
 // =========== PROFILE IMAGE ROUTES ===========
 app.post(
   "/profile-image",
+  (req, res, next) => {
+    console.log("📸 Upload route hit");
+    console.log("Headers:", req.headers);
+    console.log("Content-Type:", req.headers['content-type']);
+    next();
+  },
   upload.single("profileImage"),
   auth,
   async (req, res) => {
     try {
+      console.log("🔍 After multer - req.file:", req.file);
+      console.log("🔍 After multer - req.body:", req.body);
+      console.log("🔍 User ID from auth:", req.userid);
+
       const user = await User.findOne({ _id: req.userid });
-      if (!user) return res.status(400).json({ error: "User not found" });
-      const profileImage = req.file ? `/uploads/${req.file.filename}` : null;
+      if (!user) {
+        return res.status(400).json({ error: "User not found" });
+      }
+
+      // Check if file was uploaded
+      if (!req.file) {
+        return res.status(400).json({ 
+          error: "No file uploaded. Make sure to use 'profileImage' as the field name" 
+        });
+      }
+
+      // Save the image path
+      const profileImage = `/uploads/${req.file.filename}`;
       user.profileImage = profileImage;
       await user.save();
-      res.status(200).json({ message: "Profile image updated successfully" });
+
+      console.log("✅ Profile image updated successfully:", profileImage);
+      
+      res.status(200).json({ 
+        message: "Profile image updated successfully",
+        profileImage: profileImage,
+        fileInfo: {
+          filename: req.file.filename,
+          size: req.file.size,
+          mimetype: req.file.mimetype
+        }
+      });
     } catch (e) {
-      res.status(500).json({ error: "Profile image update failed" });
+      console.error("❌ Error updating profile image:", e);
+      res.status(500).json({ 
+        error: "Profile image update failed",
+        details: e.message 
+      });
     }
-  },
+  }
 );
 
 // ========== SOCKET.IO ==========
