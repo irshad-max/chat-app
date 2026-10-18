@@ -2,16 +2,16 @@
 require("dotenv").config();
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const cors = require("cors");
-const http = require("http");
-const { Server } = require("socket.io");
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
-const connectDB = require("./data-base/db-starter");
+const express = require("express"); //PROVIDE EASY WAY TO HANDLE REQ AND RES
+const bcrypt = require("bcrypt"); //FOR PASSWORD HASHING
+const jwt = require("jsonwebtoken"); //WITH THE HELP OF JWT I CREATE ACCESS TOKEN
+const cors = require("cors"); //SLOVE ORIGIN PROBLEM AND SECURE OUR BACKEND API 
+const http = require("http"); //CREATE SERVER
+const { Server } = require("socket.io"); // WE CAN BUILD SOCKETWEB SYSTEM
+const multer = require("multer"); //FOR IMAGE CONFRIGRATION
+const path = require("path"); //CHECK PATH EXITS OR NOT (IF NOT THAN CREATE IT)
+const fs = require("fs"); //CHECK FILE EXTENTION
+const connectDB = require("./data-base/db-starter"); //CONNECT DATA-BASE
 
 //data-base models
 const User = require("./data-base/user-module");
@@ -37,7 +37,7 @@ if (!JWT_SECRET) {
 
 // ========== IMAGE UPLOAD ==========
 const uploadDir = "./uploads";
-//BEFORE CHECK UPLOAD FOLDER EXITS OR NOT CREATE UPLOAD FOLDER
+//BEFORE CHECK UPLOAD FOLDER EXITS OR NOT (CREATE UPLOAD FOLDER)
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 //TELL WHERE FILE SAVE AND WHATS THE UNIQUE NAME AND GIVE CALL BACK AS RETURN
 const storage = multer.diskStorage({
@@ -47,6 +47,7 @@ const storage = multer.diskStorage({
     cb(null, "profile-" + uniqueSuffix + path.extname(file.originalname));
   },
 });
+
 const fileFilter = (req, file, cb) => {
   //CHECK EXTENTION OF IMAGE VALID OR NOT 
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
@@ -282,11 +283,11 @@ app.get("/request-show", auth, async (req, res) => {
   }
 });
 
-//========== ACCEPT REQUEST ROUTES AND ADD FRIEND IN BOTH FRINED LIST ==========
+//========== ACCEPT REQUEST ROUTES AND ADD FRIEND IN BOTH USER FRIEND LIST ==========
 app.post("/accept-request/:id", async (req, res) => {
   try {
     const accept = await Request.findByIdAndUpdate(
-      req.params.id,
+      req.params.id, //CHECK SENDER PRESSENT OR NOT (IF PRESENT THAN UPDATE IT)
       { status: "accepted" },
       { returnDocument: "after" },
     );
@@ -302,6 +303,42 @@ app.post("/accept-request/:id", async (req, res) => {
     res.status(500).json({ message: "server error" })
   }
 });
+
+//============DELETE FRIEND REQUEST FROM FRONTEND AND MARKS AS NOT FRIEND IN DATABASE============
+//============18/10/2026===========
+app.post("/delete-request/:id", async (req, res) => {
+  try {
+    const accept = await Request.findByIdAndUpdate(
+      req.params.id, //CHECK SENDER PRESSENT OR NOT (IF PRESENT THAN UPDATE IT)
+      { status: "rejected" },
+      { returnDocument: "after" },
+    );
+    res.status(200).json({ message: "Friend request rejected" });
+  }
+  catch (e) {
+    res.status(500).json({ message: "server error" })
+  }
+});
+
+//============= DELETE FROM FRIEND LIST==============
+app.post("/delete/friend", auth, async (req, res) => {
+  const { deleteuserid } = req.body
+  if (!req.userid) return res.status(401).send("request invalid")
+  try {
+    if (!deleteuserid) return res.status(400).send("user not found")
+    await User.findByIdAndUpdate(req.userid, {
+      $pull: { friend: deleteuserid }
+    })
+    await User.findByIdAndUpdate(deleteuserid, {
+      $pull: { friend: req.userid }
+    });
+    res.status(200).send("user delete from list")
+  }
+  catch (e) {
+    res.status(500).json({ message: "server error" })
+  }
+})
+
 
 //========== GET FRIEND LIST ROUTES ==========
 app.get("/friends", auth, async (req, res) => {
@@ -326,7 +363,7 @@ app.get("/friends", auth, async (req, res) => {
 app.get("/unread-counts", auth, async (req, res) => {
   try {
     const userId = req.userid;
-    const user = await User.findById(userId).populate("friend", "_id");
+    const user = await User.findById(userId).populate("friend", "_id"); // EXTRACT FRIEND LIST
     const friendIds = user.friend.map((f) => f._id);
     const unreadCounts = await Msg.aggregate([
       { $match: { sender: { $in: friendIds }, receiver: userId, seen: false } },
@@ -343,10 +380,12 @@ app.get("/unread-counts", auth, async (req, res) => {
 });
 
 // =========== EMAIL CHANGE ROUTES ===========
-app.post("/verify-email", auth, async (req, res) => {
-  const { password } = req.body;
+app.post("/verify-email", checkerToken, auth, async (req, res) => {
+  const { enter_password } = req.body;
   try {
-    const user = await User.find({ password: password });
+    const store_password = await User.findOne({ email: res.email })
+    if (!store_password) return res.status(400).json({ error: "email  is not found" })
+    const user = await bcrypt.compare(enter_password, store_password.password)
     if (!user) return res.status(400).json({ error: "password is wrong" });
     // redirect email change page and send response 200
     res.status(200).json({ message: "Email change successfully" });
@@ -369,58 +408,34 @@ app.post("/write-notes", auth, async (req, res) => {
 });
 
 // =========== PROFILE IMAGE ROUTES ===========
-app.post(
-  "/profile-image",
-  (req, res, next) => {
-    console.log("📸 Upload route hit");
-    console.log("Headers:", req.headers);
-    console.log("Content-Type:", req.headers['content-type']);
-    next();
-  },
-  upload.single("profileImage"),
-  auth,
-  async (req, res) => {
-    try {
-      console.log("🔍 After multer - req.file:", req.file);
-      console.log("🔍 After multer - req.body:", req.body);
-      console.log("🔍 User ID from auth:", req.userid);
-
-      const user = await User.findOne({ _id: req.userid });
-      if (!user) {
-        return res.status(400).json({ error: "User not found" });
-      }
-
-      // Check if file was uploaded
-      if (!req.file) {
-        return res.status(400).json({ 
-          error: "No file uploaded. Make sure to use 'profileImage' as the field name" 
-        });
-      }
-
-      // Save the image path
-      const profileImage = `/uploads/${req.file.filename}`;
-      user.profileImage = profileImage;
-      await user.save();
-
-      console.log("✅ Profile image updated successfully:", profileImage);
-      
-      res.status(200).json({ 
-        message: "Profile image updated successfully",
-        profileImage: profileImage,
-        fileInfo: {
-          filename: req.file.filename,
-          size: req.file.size,
-          mimetype: req.file.mimetype
-        }
-      });
-    } catch (e) {
-      console.error("❌ Error updating profile image:", e);
-      res.status(500).json({ 
-        error: "Profile image update failed",
-        details: e.message 
+app.post("/profile-image", upload.single("profileImage"), auth, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.userid });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({
+        error: "No file uploaded. Make sure to use 'profileImage' as the field name"
       });
     }
+    // Save the image path
+    const profileImage = `/uploads/${req.file.filename}`;
+    user.profileImage = profileImage;
+    await user.save();
+
+    res.status(200).json({
+      message: "Profile image updated successfully"
+    });
+  } catch (e) {
+    console.error(" Error updating profile image:", e);
+    res.status(500).json({
+      error: "Profile image update failed",
+      details: e.message
+    });
   }
+}
 );
 
 // ========== SOCKET.IO ==========
@@ -430,6 +445,8 @@ const io = new Server(server, {
 const onlineUsers = new Map(); // userId -> socketId
 const userCurrentChat = new Map(); // userId -> chatPartnerId
 
+
+//========token checking and assignment==========
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   if (!token) return next(new Error("No token"));
@@ -441,19 +458,23 @@ io.use((socket, next) => {
   }
 });
 
+
+//21/9/2026
 io.on("connection", (socket) => {
   const userId = socket.userid?.toString();
   if (!userId) return;
-  onlineUsers.set(userId, socket.id);
-  socket.join(userId);
+  onlineUsers.set(userId, socket.id); //set in map as object
+  socket.join(userId); // add new online user into socket
   socket.broadcast.emit("user_online", userId);
 
-  // ✅ NEW: Check online status of a specific user
+  //Check online status of a specific user
   socket.on("check_online", ({ userId: targetUserId }) => {
     const isOnline = onlineUsers.has(targetUserId);
     socket.emit("online_status", { userId: targetUserId, isOnline });
   });
 
+
+  //==========set joining user as object to verify===========
   socket.on("joinChat", async (receiverID) => {
     const receiverIdStr = receiverID.toString();
     userCurrentChat.set(userId, receiverIdStr);
@@ -471,14 +492,14 @@ io.on("connection", (socket) => {
 
   socket.on("leaveChat", (receiverID) => {
     if (userCurrentChat.get(userId) === receiverID?.toString())
-      userCurrentChat.delete(userId);
+      userCurrentChat.delete(userId); // if user leave the chat so delete object
   });
 
   socket.on("pass_indicator", ({ id }) => {
     if (id) io.to(id).emit("typing_indicator", { text: "typing" });
   });
 
-  // ✅ NEW: Stop typing indicator
+  //Stop typing indicator
   socket.on("stop_typing", ({ id }) => {
     if (id) io.to(id).emit("stop_typing_indicator");
   });
@@ -502,6 +523,8 @@ io.on("connection", (socket) => {
       delivered: false,
       seen: false,
     };
+
+    //if user online then execute this block 
     if (onlineUsers.has(receiverId)) {
       await Msg.findByIdAndUpdate(newMsg._id, { delivered: true });
       messageObj.delivered = true;
@@ -513,18 +536,24 @@ io.on("connection", (socket) => {
         createdAt: newMsg.createdAt,
         delivered: true,
       });
+
+      //if user not chat with sender user so
       if (userCurrentChat.get(receiverId) !== senderId) {
         const unreadCount = await Msg.countDocuments({
           sender: senderId,
           receiver: receiverId,
           seen: false,
         });
+
+        //and receiver user get notification
         io.to(receiverId).emit("new_message_notification", {
           from: senderId,
           count: unreadCount,
         });
       }
-    } else {
+    }
+    //if user are not online than thisw block execute  
+    else {
       socket.emit("message_sent", {
         _id: newMsg._id,
         text,
