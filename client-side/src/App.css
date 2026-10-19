@@ -1,7 +1,242 @@
-html, body, #root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+body {
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Login page */
+.Login_containers {
+  height: 400px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: #3e3d3b 0px 0px 10px;
+}
+
+/*chat-app logo container*/
+.Logo {
+  margin: 0px;
+  height: 50px;
+  width: 50px;
+  transform: translateY(-77px);
+  border: 2px solid rgb(166, 0, 255);
+  border-top: none;
+  border-bottom: none;
+  border-radius: 10px;
+}
+
+/*chat-app logo */
+.Logo img {
+  height: 210px;
+  width: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/*greeting text belowe logo*/
+.welcome_greeting_card {
+  margin: 0px;
+  height: 25px;
+  width: 78px;
+  border: 1px solid rgb(177, 110, 219);
+  text-align: center;
+  align-content: center;
+  border-radius: 10px;
+  transform: translateY(-62px) translateX(-5px);
+  background-color: rgb(202, 196, 244);
+  color: rgb(109, 64, 191);
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+/*greeting text container */
+.welcome_greeting_card p {
+  margin: 2px;
+  font-size: 10px;
+}
+
+/*greeting text paragraph*/
+.greeting_text {
+  margin: 0px;
+  transform: translateY(-59px);
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+}
+
+/*greeting text paragraph span*/
+.greeting_text span {
+  margin: 0px;
+  color: #e67e22;
+}
+
+/*form part*/
+.Form {
+  height: 100px;
+  width: 200px;
+  transform: translateY(-60px) translateX(-30px);
+}
+
+/*form part*/
+.Form input {
+  margin: 0px 0px 5px 0px;
+  border-radius: 10px;
+  height: 23px;
+  width: 250px;
+  border: 2px solid rgb(142, 139, 139);
+
+}
+
+/*form part*/
+.Form label {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(30, 30, 31);
+  transform: translateY(-800px);
+}
+
+/*router for regiter*/
+.link {
+  margin: 0px;
+  transform: translateY(80px);
+}
+
+/* Register page */
+.Registr_containers {
+  height: 400px;
+  width: 400px;
+  box-shadow: #3e3d3b 0px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+/*for photo uploading*/
+.Form input[type="file"] {
+  display: none;
+}
+
+/*for photo uploading logo*/
+.Profile_photo div {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+  transform: translateX(100px);
+  text-align: center;
+  align-content: center;
+  font-size: 35px;
+  background-color: rgb(69, 68, 71);
+
+}
+
+/* forgot page  */
+.forgot_containers {
+  height: 400px;
+  width: 400px;
+  box-shadow: #3e3d3b 0px 0px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+/*forgot form part*/
+.Forgot_Form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transform: translateY(-25px);
+}
+
+/*forgot input part*/
+.Forgot_Form input {
+  margin: 0px 0px 5px 0px;
+  border-radius: 10px;
+  height: 29px;
+  width: 250px;
+  border: 1px solid rgb(189, 182, 182);
+}
+
+/*forgot text paragraph*/
+.Forgot_Form p {
+  margin: 0px;
+  font-size: 17px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(75, 75, 77);
+  font-weight: 800;
+}
+
+/*forgot text paragraph*/
+.Forgot_Form p span {
+  color: #e67e22;
+}
+
+/*router for other part of login page*/
+.link {
+  font-size: 19px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #3e3d3b;
+}
+
+.link a {
+  text-decoration: none;
+  color: #3e3d3b;
+}
+
+.Login_link {
+  font-size: 14px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #3e3d3b;
+  transform: translateY(100px);
+}
+
+.Login_link a {
+  text-decoration: none;
+  color: #3e3d3b;
+}
+
+/*button summition*/
+.submit {
+  margin: 0px 0px 0px 0px;
+  border-radius: 10px;
+  height: 25px;
+  width: 250px;
+  border: none;
+  background-color: rgb(105, 87, 218);
+  color: rgb(255, 255, 255);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/*forgot router*/
+.Forgot_pass {
+  margin: 0px 0px 0px 0px;
+  transform: translateX(107px);
+}
+
+/*forgot text paragraph*/
+.Forgot_pass a {
+  text-decoration: none;
+  color: #3e3d3b;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  color: rgb(105, 87, 218);
+}
+
+/*error text paragraph*/
+.error {
+  color: red;
+  font-size: 9px;
+  font-family: Arial, Helvetica, sans-serif;
 }

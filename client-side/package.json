@@ -13,9 +13,12 @@
     "@vitejs/plugin-react": "^5.1.1",
     "axios": "^1.13.6",
     "emoji-picker-react": "^1.7.2",
+    "form-hook": "^0.0.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-hook-form": "^7.90.0",
+    "react-router-dom": "^7.18.4",
     "socket.io-client": "^4.8.3",
     "vite": "^7.3.1"
   },

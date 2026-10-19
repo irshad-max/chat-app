@@ -22,7 +22,7 @@ const Msg = require("./data-base/db-msg--collector");
 const app = express();
 
 // CORS
-const allowedOrigins = process.env.CLIENT_URL;
+const allowedOrigins = "http://localhost:5173";
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
@@ -89,7 +89,7 @@ app.post("/register", upload.single("profileImage"), async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const profileImage = req.file
       ? `/uploads/${req.file.filename}`
-      : null;
+      : "https://www.google.com/imgres?q=user%20photo&imgurl=https%3A%2F%2Fimg.magnific.com%2Ffree-vector%2Fuser-circles-set_78370-4704.jpg%3Fsemt%3Dais_hybrid%26w%3D740%26q%3D80&imgrefurl=https%3A%2F%2Fwww.magnific.com%2Ffree-photos-vectors%2Fuser&docid=LDSN5O5QqPXmdM&tbnid=_8G6DkzVIGYofM&vet=12ahUKEwikiOSFvMWXAxUhR2wGHdhHCyMQnPAOegQIRBAA..i&w=740&h=740&hcb=2&ved=2ahUKEwikiOSFvMWXAxUhR2wGHdhHCyMQnPAOegQIRBAA";
     const user = await User.create({
       name,
       email,
@@ -114,7 +114,7 @@ app.post("/verify/email", async (req, res) => {
     const otp = generateOTP();
     const expiry = Date.now() + 300000; // 5 minutes
     otpStore.set(email, { otp, expiry });
-    res.status(200).json({ message: "Email sent successfully" });
+    res.status(200).json({ message: "Email sent successfully", otp: otp });
   } catch {
     res.status(500).json({ message: "validation failed" });
   }
@@ -122,11 +122,11 @@ app.post("/verify/email", async (req, res) => {
 
 // =========== verification otp ROUTES ===========
 app.post("/verify-otp", async (req, res) => {
-  const { email, otp } = req.body;
-  if (!email || !otp)
+  const { otp } = req.body;
+  if (!otp)
     return res.status(400).json({ error: "Email and OTP required" });
   try {
-    const storedData = otpStore.get(email);
+    const storedData = otpStore.get(otp);
     if (!storedData)
       return res.status(400).json({ error: "No OTP request found" });
     if (Date.now() > storedData.expiry) {
