@@ -12,6 +12,7 @@ const Forgot_password = () => {
             const response = await axios.post("http://localhost:3001/verify/email", data)
             console.log(response.data.otp)
             if (response.data.otp) {
+               await localStorage.setItem("email",data.email)
                 UseNavigate("/otp")
             }
         }

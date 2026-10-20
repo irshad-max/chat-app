@@ -122,11 +122,11 @@ app.post("/verify/email", async (req, res) => {
 
 // =========== verification otp ROUTES ===========
 app.post("/verify-otp", async (req, res) => {
-  const { otp } = req.body;
-  if (!otp)
+  const { email, otp } = req.body;
+  if (!email || !otp)
     return res.status(400).json({ error: "Email and OTP required" });
   try {
-    const storedData = otpStore.get(otp);
+    const storedData = otpStore.get(email);
     if (!storedData)
       return res.status(400).json({ error: "No OTP request found" });
     if (Date.now() > storedData.expiry) {
@@ -157,7 +157,7 @@ app.post("/resend-otp", async (req, res) => {
   storedData.otp = generateOTP();
   storedData.expiry = Date.now() + 10 * 60 * 1000;
   otpStore.set(email, storedData);
-  res.json({ message: "New OTP Send Successfully" });
+  res.json({ message: "New OTP Send Successfully", otp: storedData.otp });
 });
 
 // =========== LOGIN ROUTES ===========

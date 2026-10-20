@@ -4,6 +4,7 @@ import Login_page from "./AUTHPAGE/Login_page";
 import Register_page from "./AUTHPAGE/Register_page";
 import Forgot_password from "./AUTHPAGE/Forgot_password";
 import Otp_page from "./AUTHPAGE/Otp_page";
+import Reset_page from "./AUTHPAGE/Reset_password";
 import "./App.css";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
           <Route path="/register" element={<Register_page />} />
           <Route path="/forgot" element={<Forgot_password />} />
           <Route path="/otp" element={<Otp_page />} />
+          <Route path="/reset/password" element={<Reset_page />} />
         </Routes>
       </BrowserRouter>
     </>
