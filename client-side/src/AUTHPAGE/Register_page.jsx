@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 const Register_page = () => {
     const {
@@ -7,6 +7,7 @@ const Register_page = () => {
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const Usenagivation = useNavigate();
     const onSubmit = async (data) => {
         const fileInput = document.getElementById("photo");
         const file = fileInput.files[0];
@@ -19,7 +20,9 @@ const Register_page = () => {
                 formData.append("profileImage", file)
             }
             const response = await axios.post("http://localhost:3001/register", formData)
-            console.log(response.data);
+            if (response.data.status == 200) {
+                Usenagivation("/chatarea");
+            }
         } catch (error) {
             console.log(error);
         }

@@ -168,8 +168,9 @@ app.post("/login", async (req, res) => {
   if (!(await bcrypt.compare(password, user.password)))
     return res.status(401).json({ error: "Password is wrong" });
   const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
-  res.json({ token, name: user.name, profileImage: user.profileImage });
+  res.status(200).json({ token, name: user.name, profileImage: user.profileImage });
 });
+
 
 // ========== RESET AUTH CHECKER ===========
 const checkerToken = (req, res, next) => {
@@ -211,6 +212,20 @@ const auth = (req, res, next) => {
     return res.status(401).json({ error: "Invalid token" });
   }
 };
+
+// =========== AUTO LOGIN ROUTES ===========
+app.post("/auto/login", auth, async (req, res) => {
+  try {
+    if (!req.userid) return res.status(401).json({ message: "invalid token" })
+    const id = req.userid
+    const data = await User.findById(id)
+    if (!data) return res.status(401).json({ message: "no user find" })
+    res.status(200).json({ name: data.name, profileImage: data.profileImage })
+  }
+  catch (e) {
+    console.log("error", e)
+  }
+})
 
 // =========== VERIFY TOKEN ROUTES AUTO LOGIN ===========
 app.post("/verify-token", auth, async (req, res) => {

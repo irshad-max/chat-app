@@ -1,27 +1,27 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Reset_page = () => {
 
     const { register, handleSubmit, formState: { error } } = useForm()
     const resetToken = localStorage.getItem("resetToken")
+    const Usenavigate = useNavigate();
     const onSubmit = async (data) => {
         try {
-            console.log(resetToken)
             const response = await axios.post(
                 "http://localhost:3001/reset-password",
                 {
                     password: data.password
                 },
                 {
-                    headers: {
-                        Authorization: `Bearer ${resetToken}`
-                    }
+                    headers: { Authorization: `Bearer ${resetToken}` }
                 }
             );
-
-            console.log(response.data);
+            if (response.data.status == 200) {
+                localStorage.removeItem("resetToken")
+                Usenagivation("/chatarea");
+            }
         }
         catch (e) {
             localStorage.removeItem("resetToken")
