@@ -240,3 +240,71 @@ body {
   font-size: 9px;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/*SIDE BAR CREATION CODE
+22/10/2026*/
+.sidebar {
+  height: 100vh;
+  width: 250px;
+  border: 2px solid orange;
+  border-top-right-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: linear-gradient(160deg,
+      #FFF8E9 0%,
+      #FFE3B3 45%,
+      #DDEBD5 100%);
+  color: #603813;
+}
+
+/* AGR ME KISI MENU KO SLECT KARU TOH YE HIGHLIGH HONGA */
+.sidebar-item.active {
+  background: linear-gradient(90deg,
+      #FF9933,
+      #ffd18a);
+  color: #603813;
+}
+
+/* YE INPUT KO ADJUST KAR RAHA HU USKA CODE HAI */
+.sidebar-search input {
+  height: 20px;
+  width: 150px;
+  margin: 0px 0px 5px 30px;
+  border-radius: 10px;
+  border: 2px solid #f5bc68;
+  outline: none;
+}
+
+/* LOGO KO ADJUST KAR RAHA HU USKA CODE HAI */
+.sidebar-logo {
+  margin: 0px 0px 0px 45px;
+  background: linear-gradient(90deg,
+      #f08316 25%,
+      #61ee55 55%,
+      #0606e9 100%);
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* SIDEBAR KE ITEM KO ADJUST KARNE KE LIYE CODE */
+.sidebar-item {
+  font-size: large;
+  font-family: Arial, Helvetica, sans-serif;
+  width: 150px;
+  height: 30px;
+  margin: 0px 0px 0px 30px;
+  text-align: center;
+}
+
+/* SETTING  TN KO NICHE KARNE KE LIYE CODE */
+.sidebar-bottom {
+  position: fixed;
+  bottom: 0;
+}
