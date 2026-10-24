@@ -260,11 +260,13 @@ app.post("/fetchmsg", auth, async (req, res) => {
 app.get("/api/search", async (req, res) => {
   try {
     const { text } = req.query;
+    const fiirst_letter = text.slice(0, 1)
     const result = await User.find({
-      name: { $regex: text }
-    });
+      name: { $regex: text, $options: fiirst_letter }
+    }).select("_id name profileImage");
     res.json(result);
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: "Server error" });
   }
 });
