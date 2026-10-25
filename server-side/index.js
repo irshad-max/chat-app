@@ -286,6 +286,15 @@ app.post("/request", auth, async (req, res) => {
   }
 });
 
+app.post("/count/request", auth, async (req, res) => {
+  try {
+    if (!req.userid) return res.status(401).send("unauthorize")
+    const tr = await Request.countDocuments({ receiver: req.userid, status: "pending" })
+    res.status(200).json(tr)
+  }
+  catch (e) { console.log("error", e) }
+})
+
 //======== SHOW REQUEST ROUTES ==========
 app.get("/request-show", auth, async (req, res) => {
   try {
