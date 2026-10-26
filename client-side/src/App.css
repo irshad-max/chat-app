@@ -305,6 +305,7 @@ body {
   font-size: 8px;
   color: rgb(255, 255, 255);
   text-align: center;
+  cursor: pointer;
 }
 
 /* SIDEBAR KE ITEM KO ADJUST KARNE KE LIYE CODE */
@@ -397,4 +398,23 @@ body {
   font-size: 8px;
   background-color: rgb(0, 89, 255);
   border: 2px solid rgb(8, 175, 226);
+}
+
+.accept-btn {
+  height: 20px;
+  width: 35px;
+  background-color: rgb(0, 89, 255);
+  border: 2px solid rgb(8, 175, 226);
+  border-radius: 20px;
+  padding-bottom: 19px;
+}
+
+.reject-btn {
+  height: 20px;
+  width: 35px;
+  background-color: rgb(0, 89, 255);
+  border: 2px solid rgb(8, 175, 226);
+  border-radius: 20px;
+  padding-bottom: 19px;
+  margin-right:5px;
 }

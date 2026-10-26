@@ -302,7 +302,7 @@ app.get("/request-show", auth, async (req, res) => {
       receiver: req.userid,
       status: "pending",
     }).populate("sender", "name profileImage");
-    res.status(200).send(requests);
+    res.status(200).json(requests);
   }
   catch (e) {
     res.status(500).json({ message: "server error" })
@@ -313,7 +313,7 @@ app.get("/request-show", auth, async (req, res) => {
 app.post("/accept-request/:id", async (req, res) => {
   try {
     const accept = await Request.findByIdAndUpdate(
-      req.params.id, //CHECK SENDER PRESSENT OR NOT (IF PRESENT THAN UPDATE IT)
+      req.params.id, //CHECK  REQUEST ID HAI YA NHI OR NOT (IF PRESENT THAN UPDATE IT)
       { status: "accepted" },
       { returnDocument: "after" },
     );

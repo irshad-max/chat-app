@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios"
 const SideBar_page = () => {
   const [text, setText] = useState("");
@@ -20,7 +21,7 @@ const SideBar_page = () => {
     }
 
     requests()
-  },[])
+  }, [token])
   const checkUser = async () => {
     try {
       const res = await axios.get("http://localhost:3001/api/search",
@@ -42,7 +43,7 @@ const SideBar_page = () => {
       <div className="sidebar">
         <div className="sidebar-logo">
           <h2>BAATCHIT</h2>
-          <span style={{ padding: "21px" }}>🔔<span className="notify">{countrequest}</span></span>
+          <span style={{ padding: "21px", cursor: "pointer" }}><Link to="/request">🔔</Link><span className="notify">{countrequest}</span></span>
         </div>
 
         <div className="sidebar-search">
