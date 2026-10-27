@@ -68,7 +68,9 @@ const SideBar_page = () => {
           ))
         }
         <div className="sidebar-bottom">
-          <div className="sidebar-item">Settings</div>
+          <div className="sidebar-item"><Link to="/friend/list" style={{ textDecoration: "none", color: " #603813" }}>Friend-list ⬆</Link></div>
+          <hr style={{ width: "90px", margin: "0px 0px 10px 60px" }}></hr>
+          <div className="sidebar-item"><Link to="/setting/option" style={{ textDecoration: "none", color: " #603813" }}>Settings</Link></div>
         </div>
       </div>
     </>
