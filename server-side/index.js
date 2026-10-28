@@ -192,7 +192,7 @@ app.post("/reset-password", checkerToken, async (req, res) => {
     const user = await User.findOne({ email: res.email });
     if (!user) return res.status(401).json({ error: "Email is wrong" });
     const hashpassword = await bcrypt.hash(password, 10);
-    user.password = await hashpassword;
+    user.password = hashpassword;
     await user.save();
     res.json({ message: "Password reset successfully" });
   } catch (error) {
@@ -463,6 +463,15 @@ app.post("/profile-image", upload.single("profileImage"), auth, async (req, res)
   }
 }
 );
+
+app.post("/getinfo", auth, async (req, res) => {
+  try {
+    if (!req.userid) return res.status(401).send("unauthorized")
+    const info = await User.findById({ _id: req.userid }).select("name email profileImage notes joinAt")
+    res.status(200).json(info)
+  }
+  catch (e) { console.log("error", e) }
+})
 
 // ========== SOCKET.IO ==========
 const io = new Server(server, {

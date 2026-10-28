@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
   notes: {
     type: String,
   },
+  joinedAt: {
+    type: Date,
+    default: Date.now
+  },
   friend: [
     {
       type: mongoose.Schema.Types.ObjectId,

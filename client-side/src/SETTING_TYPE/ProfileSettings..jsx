@@ -1,10 +1,36 @@
 
-import { useState } from "react";
-
-const defaultAvatar =
-    "https://ui-avatars.com/api/?name=Mustafa&background=3446c7&color=fff&size=256";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const ProfileSettings = () => {
+    const token = localStorage.getItem("token")
+    const [userInfo, setuserInfo] = useState({})
+    const [name, setname] = useState("")
+    const [bio, setbio] = useState("")
+    useEffect(() => {
+        async function getInfo() {
+            try {
+                const res = await axios.post("http://localhost:3001/getinfo", {}, {
+                    headers: {
+                        Authorization: `bearer ${token}`
+                    }
+                })
+                console.log(res.data)
+                setuserInfo(res.data)
+            }
+            catch (e) { console.log("error", e) }
+        }
+        getInfo()
+    }, [token])
+
+    const changeProfile = function (e) {
+        const file = e.target.files?.[0]
+        if (!file) {
+            console.log("file nhi mila")
+            return
+        }
+        console.log(file)
+    }
     return (
         <div className="profile-settings">
             <div className="profile-settings-layout">
@@ -17,19 +43,19 @@ const ProfileSettings = () => {
                     <div className="profile-preview-content">
                         <img
                             className="profile-preview-avatar"
-                            src={defaultAvatar}
+                            src={userInfo.profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                             alt="Profile preview"
                         />
 
                         <h2 className="profile-preview-name">
-                            {"Your name"}
+                            {userInfo.name}
                             <span className="profile-online-indicator">
                                 {" "}●
                             </span>
                         </h2>
 
                         <p className="profile-preview-bio">
-                            {"Add a bio to introduce yourself"}
+                            {userInfo?.notes || "Add a bio to introduce yourself"}
                         </p>
 
                         <div className="profile-online-badge">
@@ -40,7 +66,7 @@ const ProfileSettings = () => {
                     <div className="profile-preview-details">
                         <p className="profile-detail-item">
                             <span className="profile-detail-icon">✉</span>
-                            <span>{"irshad@gmail.com"}</span>
+                            <span>{userInfo.email}</span>
                         </p>
 
                         <p className="profile-detail-item">
@@ -53,7 +79,7 @@ const ProfileSettings = () => {
                         <p className="profile-detail-item">
                             <span className="profile-detail-icon">◷</span>
                             <span>
-                                Last seen: {"12:54pm"}
+                                Connected to Baatchit on: {userInfo.joinAt?.slice(0, 10)}
                             </span>
                         </p>
                     </div>
@@ -74,25 +100,23 @@ const ProfileSettings = () => {
                         <div className="profile-photo-controls">
                             <img
                                 className="profile-current-avatar"
-                                src={defaultAvatar}
+                                src={userInfo.profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                                 alt="Current profile"
                             />
 
                             <label className="profile-button profile-primary-button profile-upload-button">
                                 Change Photo
-
                                 <input
                                     className="profile-file-input"
                                     type="file"
                                     accept="image/*"
-                                    onChange={"hiii"}
+                                    onChange={changeProfile}
                                 />
                             </label>
 
                             <button
                                 className="profile-button profile-secondary-button"
                                 type="button"
-                                onClick={"hii"}
                             >
                                 Remove
                             </button>
@@ -112,16 +136,14 @@ const ProfileSettings = () => {
                         <input
                             className="profile-input"
                             type="text"
-                            value={"hii"}
+                            value={userInfo.name}
                             maxLength={50}
-                            onChange={(e) =>
-                                updateProfile("name", e.target.value)
-                            }
+                            onChange={(e) => setname(e.target.value)}
                             placeholder="Enter your name"
                         />
 
                         <p className="profile-character-count">
-                            {6}/50
+                            {userInfo.name?.length}/50
                         </p>
                     </div>
 
@@ -133,17 +155,14 @@ const ProfileSettings = () => {
 
                         <textarea
                             className="profile-input profile-textarea"
-                            value={"ii"}
+                            value={userInfo.notes || "Tell people something about yourself..."}
                             maxLength={150}
                             rows={4}
-                            onChange={(e) =>
-                                updateProfile("bio", e.target.value)
-                            }
-                            placeholder="Tell people something about yourself..."
+                            onChange={(e) => setbio(e.target.value)}
                         />
 
                         <p className="profile-character-count">
-                            {9}/150
+                            {userInfo.notes?.length}/150
                         </p>
                     </div>
 
@@ -156,7 +175,7 @@ const ProfileSettings = () => {
                         <input
                             className="profile-input profile-email-input"
                             type="email"
-                            value={"hii"}
+                            value={userInfo.email}
                             readOnly
                         />
 
@@ -164,18 +183,6 @@ const ProfileSettings = () => {
                             Email cannot be changed here.
                         </p>
                     </div>
-
-                    {/* Privacy Settings */}
-                    <div className="profile-privacy-section">
-                        <h3 className="profile-section-title">
-                            Online Status &amp; Last Seen
-                        </h3>
-
-                        <p className="profile-section-description">
-                            Choose who can see your activity.
-                        </p>
-                    </div>
-
                     {/* Save Changes */}
                     <button
                         className="profile-button profile-primary-button profile-save-button"
