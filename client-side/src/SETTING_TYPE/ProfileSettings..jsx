@@ -6,7 +6,7 @@ const ProfileSettings = () => {
     const token = localStorage.getItem("token")
     const [userInfo, setuserInfo] = useState({})
     const [name, setname] = useState("")
-    const [bio, setbio] = useState("")
+    const [bio, setbio] = useState("");
     useEffect(() => {
         async function getInfo() {
             try {
@@ -15,7 +15,6 @@ const ProfileSettings = () => {
                         Authorization: `bearer ${token}`
                     }
                 })
-                console.log(res.data)
                 setuserInfo(res.data)
             }
             catch (e) { console.log("error", e) }
@@ -23,14 +22,40 @@ const ProfileSettings = () => {
         getInfo()
     }, [token])
 
-    const changeProfile = function (e) {
+    const changeProfile = async function (e) {
         const file = e.target.files?.[0]
+        const formdata = new FormData();
+        formdata.append("profileImage", file);
+        console.log(file)
         if (!file) {
             console.log("file nhi mila")
             return
         }
-        console.log(file)
+        try {
+            const files = await axios.post("http://localhost:3001/profile-image", formdata, {
+                headers: {
+                    Authorization: `bearer ${token}`
+                }
+            })
+            console.log(files)
+        }
+        catch (e) { console.log(e.response?.data || e.message) }
     }
+
+    const changeinfo = async () => {
+        const data = {};
+        if (name.trim()) data.name = name;
+        if (bio.trim()) data.notes = bio;
+        try {
+            const res = await axios.post("http://localhost:3001/write-notes", data, {
+                headers: {
+                    Authorization: `bearer ${token}`
+                }
+            })
+        }
+        catch (e) { console.log("error", e) }
+    }
+
     return (
         <div className="profile-settings">
             <div className="profile-settings-layout">
@@ -43,7 +68,7 @@ const ProfileSettings = () => {
                     <div className="profile-preview-content">
                         <img
                             className="profile-preview-avatar"
-                            src={userInfo.profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
+                            src={`http://localhost:3001${userInfo?.profileImage}` || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                             alt="Profile preview"
                         />
 
@@ -79,7 +104,7 @@ const ProfileSettings = () => {
                         <p className="profile-detail-item">
                             <span className="profile-detail-icon">◷</span>
                             <span>
-                                Connected to Baatchit on: {userInfo.joinAt?.slice(0, 10)}
+                                Connected to Baatchit on: {userInfo.joinedAt?.slice(0, 10)}
                             </span>
                         </p>
                     </div>
@@ -100,7 +125,7 @@ const ProfileSettings = () => {
                         <div className="profile-photo-controls">
                             <img
                                 className="profile-current-avatar"
-                                src={userInfo.profileImage || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
+                                src={`http://localhost:3001${userInfo?.profileImage}` || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                                 alt="Current profile"
                             />
 
@@ -136,14 +161,13 @@ const ProfileSettings = () => {
                         <input
                             className="profile-input"
                             type="text"
-                            value={userInfo.name}
+                            placeholder="Enter Your New Name"
                             maxLength={50}
                             onChange={(e) => setname(e.target.value)}
-                            placeholder="Enter your name"
                         />
 
                         <p className="profile-character-count">
-                            {userInfo.name?.length}/50
+                            {name?.length}/50
                         </p>
                     </div>
 
@@ -154,15 +178,17 @@ const ProfileSettings = () => {
                         </label>
 
                         <textarea
+                            type="text"
                             className="profile-input profile-textarea"
-                            value={userInfo.notes || "Tell people something about yourself..."}
+                            value={bio}
+                            placeholder="Tell people something about yourself..."
                             maxLength={150}
                             rows={4}
                             onChange={(e) => setbio(e.target.value)}
                         />
 
                         <p className="profile-character-count">
-                            {userInfo.notes?.length}/150
+                            {bio?.length}/150
                         </p>
                     </div>
 
@@ -187,8 +213,9 @@ const ProfileSettings = () => {
                     <button
                         className="profile-button profile-primary-button profile-save-button"
                         type="button"
+                        onClick={() => changeinfo()}
                     >
-                        {"hii" ? "✓ Changes ready to save" : "Save Changes"}
+                        ✓ Changes ready to save
                     </button>
                 </section>
             </div>

@@ -26,6 +26,7 @@ const allowedOrigins = "http://localhost:5173";
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 const server = http.createServer(app);
 
 // JWT
@@ -422,12 +423,26 @@ app.post("/verify-email", checkerToken, auth, async (req, res) => {
 
 // =========== WRITE NOTES ROUTES ===========
 app.post("/write-notes", auth, async (req, res) => {
-  const { notes } = req.body;
+  const { name, notes } = req.body;
   try {
     const note = await User.findOne({ _id: req.userid })
-    note.notes = notes;
-    await note.save();
-    res.status(200).json({ message: "Note created successfully", note });
+    if (!notes && !name) return res.status(401).send("name and notes required")
+    if (notes && !name) {
+      note.notes = notes;
+      await note.save();
+      return res.status(200).json({ message: "Note created successfully", note });
+    }
+    if (!notes && name) {
+      note.name = name;
+      await note.save();
+      return res.status(200).json({ message: "Name change successfully", note });
+    }
+    if (notes && name) {
+      note.notes = notes;
+      note.name = name;
+      await note.save();
+      return res.status(200).json({ message: "Note created successfully And Name change successfully", note });
+    }
   } catch (e) {
     res.status(500).json({ error: "Note creation failed" });
   }
@@ -436,7 +451,7 @@ app.post("/write-notes", auth, async (req, res) => {
 // =========== PROFILE IMAGE ROUTES ===========
 app.post("/profile-image", upload.single("profileImage"), auth, async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.userid });
+    const user = await User.findById({ _id: req.userid });
     if (!user) {
       return res.status(400).json({ error: "User not found" });
     }
@@ -467,7 +482,7 @@ app.post("/profile-image", upload.single("profileImage"), auth, async (req, res)
 app.post("/getinfo", auth, async (req, res) => {
   try {
     if (!req.userid) return res.status(401).send("unauthorized")
-    const info = await User.findById({ _id: req.userid }).select("name email profileImage notes joinAt")
+    const info = await User.findById({ _id: req.userid }).select("name email profileImage notes joinedAt")
     res.status(200).json(info)
   }
   catch (e) { console.log("error", e) }
