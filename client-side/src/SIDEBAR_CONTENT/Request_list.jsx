@@ -40,7 +40,7 @@ const Request_list = () => {
             <div className="sidebar">
                 <div className="sidebar-logo">
                     <h2>BAATCHIT</h2>
-                    <span style={{ padding: "21px", cursor: "pointer" }}><Link to="/chatarea">⮜</Link></span>
+                    <span style={{ padding: "21px", cursor: "pointer" }}><Link to="/home">⮜</Link></span>
                 </div>
 
                 <div className="sidebar-search">

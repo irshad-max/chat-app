@@ -21,7 +21,7 @@ const Register_page = () => {
             }
             const response = await axios.post("http://localhost:3001/register", formData)
             if (response.data.status == 200) {
-                Usenagivation("/chatarea");
+                Usenagivation("/home");
             }
         } catch (error) {
             console.log(error);

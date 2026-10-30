@@ -20,7 +20,7 @@ const Reset_page = () => {
             );
             if (response.data.status == 200) {
                 localStorage.removeItem("resetToken")
-                Usenagivation("/chatarea");
+                Usenagivation("/home");
             }
         }
         catch (e) {

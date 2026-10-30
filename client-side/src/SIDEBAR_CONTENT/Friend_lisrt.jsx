@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
 const Friend_list = () => {
     const [friend_list, setfriend_list] = useState([])
     const token = localStorage.getItem("token")
+    const navigate = useNavigate();
 
     useEffect(() => {
         const requests = async () => {
@@ -20,7 +21,6 @@ const Friend_list = () => {
 
         requests()
     }, [token])
-
     return (
         <>
             <div className="sidebar">
@@ -31,7 +31,7 @@ const Friend_list = () => {
                 </div>
                 {
                     friend_list.map((request) => (
-                        <div className="user-card" key={request._id}>
+                        <div className="user-card" key={request._id} onClick={() => navigate(`/chat/${request._id}`)}>
                             <img
                                 src={
                                     request?.profileImage ||
@@ -48,11 +48,11 @@ const Friend_list = () => {
                     ))
                 }
                 <div className="sidebar-bottom">
-                    <div className="sidebar-item"><Link to="/chatarea" style={{ textDecoration: "none", color: " #603813" }}>Sreach-bar  ⬇</Link></div>
+                    <div className="sidebar-item"><Link to="/home" style={{ textDecoration: "none", color: " #603813" }}>Sreach-bar  ⬇</Link></div>
                     <hr style={{ width: "90px", margin: "0px 0px 10px 60px" }}></hr>
                     <div className="sidebar-item"><Link to="/setting/option" style={{ textDecoration: "none", color: " #603813" }}>Settings</Link></div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };

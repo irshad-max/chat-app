@@ -13,7 +13,7 @@ const Login_page = () => {
             const response = await axios.post("http://localhost:3001/login", data)
             localStorage.setItem("token", response.data.token)
             if (response.status == 200) {
-                Usenagivation("/chatarea");
+                Usenagivation("/home");
             }
         } catch (error) {
             console.log(error);

@@ -11,7 +11,7 @@ const Setting_option = () => {
                 </div>
                 <div className="sidebar-bottom">
                     <hr style={{ width: "90px", margin: "0px 0px 10px 60px" }}></hr>
-                    <div className="sidebar-item"><Link to="/chatarea" style={{ textDecoration: "none", color: " #603813" }}>Search bar⬇</Link></div>
+                    <div className="sidebar-item"><Link to="/home" style={{ textDecoration: "none", color: " #603813" }}>Search bar⬇</Link></div>
                 </div>
             </div>
         </>

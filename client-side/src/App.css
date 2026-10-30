@@ -1,6 +1,4 @@
-/* =========================
-   GLOBAL
-   ========================= */
+/*GLOBAL*/
 * {
   box-sizing: border-box;
 }
@@ -16,9 +14,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* =========================
-   LOGIN PAGE
-   ========================= */
+/* LOGIN PAGE */
 .Login_containers {
   width: min(400px, calc(100% - 32px));
   min-height: 400px;
@@ -217,9 +213,121 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* =========================
-   SIDEBAR
-   ========================= */
+/*MAINLAYOUT*/
+.app-layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+/*WELLCOME LAYOUT*/
+.welcome-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg,
+      #fff8e9,
+      #ffe8c2,
+      #e5f0df);
+  box-sizing: border-box;
+}
+
+.welcome-illustration {
+  width: 200px;
+  height: 180px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.main-bubble {
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 55px;
+  border-radius: 35px;
+  background: linear-gradient(135deg, #138808, #25c47b);
+  box-shadow: 0 15px 35px #13880830;
+  animation: floating 3s ease-in-out infinite;
+}
+
+.floating-bubble {
+  position: absolute;
+  background: white;
+  padding: 13px;
+  border-radius: 15px;
+  font-size: 22px;
+  box-shadow: 0 5px 20px #0002;
+  animation: floating 3s ease-in-out infinite;
+}
+
+.bubble-1 {
+  top: 10px;
+  left: 5px;
+}
+
+.bubble-2 {
+  top: 20px;
+  right: 5px;
+  animation-delay: 0.5s;
+}
+
+.bubble-3 {
+  bottom: 0;
+  right: 25px;
+  animation-delay: 1s;
+}
+
+.welcome-screen h1 {
+  color: #26352a;
+  font-size: 30px;
+  margin: 10px 0;
+}
+
+.welcome-screen p {
+  color: #657067;
+  font-size: 15px;
+  line-height: 1.7;
+  max-width: 400px;
+}
+
+.welcome-security {
+  margin-top: 25px;
+  font-size: 13px;
+  color: #778078;
+}
+
+@keyframes floating {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+
+/* SIDEBAR*/
 .sidebar {
   position: fixed;
   top: 0;
@@ -390,9 +498,7 @@ body {
   margin-right: 5px;
 }
 
-/* =========================
-   PROFILE SETTINGS
-   ========================= */
+/*PROFILE SETTINGS */
 .profile-settings {
   position: relative;
   margin: 0 0 0 250px;
@@ -607,9 +713,7 @@ body {
   overflow-wrap: anywhere;
 }
 
-/* =========================
-   RESPONSIVE LAYOUT
-   ========================= */
+/* RESPONSIVE LAYOUT */
 @media (max-width: 1000px) {
   .profile-settings-layout {
     grid-template-columns: minmax(0, 1fr);
@@ -712,4 +816,36 @@ body {
   .profile-card {
     padding: 12px;
   }
+}
+
+.chatarea-display {
+  position: relative;
+  margin: 0px 0px 0px 250px;
+  width: calc(100% - 250px);
+  min-height: 100vh;
+  padding: clamp(16px, 3vw, 30px);
+  box-sizing: border-box;
+  overflow: visible;
+  background: linear-gradient(135deg, #FFF8E9, #FFE8C2, #E5F0DF);
+  color: #603813;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.chatarea-navbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 50px;
+  width: 166vh;
+  border: 2px solid rgb(255, 208, 0);
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.profile-picture {
+  height: 30px;
+  width: 30px;
+  margin: 7px 0px 0px 5px;
+  border: 2px solid rgb(255, 187, 0);
+  border-radius:50%;
 }
