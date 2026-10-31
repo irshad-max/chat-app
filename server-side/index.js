@@ -488,6 +488,18 @@ app.post("/getinfo", auth, async (req, res) => {
   catch (e) { console.log("error", e) }
 })
 
+
+app.post("/get/user/info", auth, async (req, res) => {
+  const { id } = req.body
+  if (!req.userid) return res.status(401).send("unauthorized")
+  try {
+    const info = await User.findById({ _id: id }).select("name profileImage")
+    if (!info) return res.status(500).send("not fonud")
+    res.status(200).json(info)
+  }
+  catch (e) { console.log("error", e) }
+})
+
 // ========== SOCKET.IO ==========
 const io = new Server(server, {
   cors: { origin: allowedOrigins, credentials: true },

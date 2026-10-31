@@ -68,7 +68,7 @@ const ProfileSettings = () => {
                     <div className="profile-preview-content">
                         <img
                             className="profile-preview-avatar"
-                            src={`http://localhost:3001${userInfo?.profileImage}` || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
+                            src={userInfo.profileImage ? `http://localhost:3001${userInfo?.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                             alt="Profile preview"
                         />
 
@@ -125,7 +125,7 @@ const ProfileSettings = () => {
                         <div className="profile-photo-controls">
                             <img
                                 className="profile-current-avatar"
-                                src={`http://localhost:3001${userInfo?.profileImage}` || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
+                                src={userInfo.profileImage ? `http://localhost:3001${userInfo?.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                                 alt="Current profile"
                             />
 

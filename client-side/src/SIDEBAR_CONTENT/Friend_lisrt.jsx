@@ -34,7 +34,8 @@ const Friend_list = () => {
                         <div className="user-card" key={request._id} onClick={() => navigate(`/chat/${request._id}`)}>
                             <img
                                 src={
-                                    request?.profileImage ||
+                                    request.profileImage ?
+                                    `http://localhost:3001${request?.profileImage}`:
                                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"
                                 }
                                 alt={request?.name || "User"}
