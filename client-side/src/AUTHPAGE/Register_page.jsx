@@ -21,6 +21,7 @@ const Register_page = () => {
             }
             const response = await axios.post("https://talksy-09lk.onrender.com/register", formData)
             if (response.status == 200) {
+                localStorage.setItem("token", response.data.token)
                 Usenagivation("/home");
             }
         } catch (error) {
