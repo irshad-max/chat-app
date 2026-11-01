@@ -846,6 +846,12 @@ body {
   border-bottom-right-radius: 5px;
 }
 
+.chatarea-text-field {
+  height: calc(94vh - 50px);
+  width: 166vh;
+  margin: 19px 0px 0px 0px;
+}
+
 .profile-picture img {
   height: 30px;
   width: 30px;

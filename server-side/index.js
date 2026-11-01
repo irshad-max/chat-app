@@ -504,9 +504,6 @@ app.post("/get/user/info", auth, async (req, res) => {
 const io = new Server(server, {
   cors: { origin: allowedOrigins, credentials: true },
 });
-const onlineUsers = new Map(); // userId -> socketId
-const userCurrentChat = new Map(); // userId -> chatPartnerId
-
 
 //========token checking and assignment==========
 io.use((socket, next) => {
@@ -520,134 +517,20 @@ io.use((socket, next) => {
   }
 });
 
-
 //21/9/2026
 io.on("connection", (socket) => {
   const userId = socket.userid?.toString();
+  socket.join(userId.toString());
   if (!userId) return;
-  onlineUsers.set(userId, socket.id); //set in map as object
-  socket.join(userId); // add new online user into socket
-  socket.broadcast.emit("user_online", userId);
-
-  //Check online status of a specific user
-  socket.on("check_online", ({ userId: targetUserId }) => {
-    const isOnline = onlineUsers.has(targetUserId);
-    socket.emit("online_status", { userId: targetUserId, isOnline });
-  });
-
-
-  //==========set joining user as object to verify===========
-  socket.on("joinChat", async (receiverID) => {
-    const receiverIdStr = receiverID.toString();
-    userCurrentChat.set(userId, receiverIdStr);
-    await Msg.updateMany(
-      { sender: receiverIdStr, receiver: userId, delivered: false },
-      { delivered: true },
-    );
-    await Msg.updateMany(
-      { sender: receiverIdStr, receiver: userId, seen: false },
-      { seen: true },
-    );
-    io.to(receiverIdStr).emit("messages_delivered", { by: userId });
-    io.to(receiverIdStr).emit("messages_seen", { by: userId });
-  });
-
-  socket.on("leaveChat", (receiverID) => {
-    if (userCurrentChat.get(userId) === receiverID?.toString())
-      userCurrentChat.delete(userId); // if user leave the chat so delete object
-  });
-
-  socket.on("pass_indicator", ({ id }) => {
-    if (id) io.to(id).emit("typing_indicator", { text: "typing" });
-  });
-
-  //Stop typing indicator
-  socket.on("stop_typing", ({ id }) => {
-    if (id) io.to(id).emit("stop_typing_indicator");
-  });
-
-  socket.on("send_message", async ({ text, id }) => {
+  socket.on("send_message", ({ text, id }) => {
     if (!text || !id) return;
-    const senderId = userId,
-      receiverId = id.toString();
-    const newMsg = await Msg.create({
-      sender: senderId,
-      receiver: receiverId,
-      text,
-      delivered: false,
-      seen: false,
+    const receiverId = id.toString();
+    io.to(receiverId).emit("receive_message", {
+      text: text,
+      sender: socket.userId
     });
-    const messageObj = {
-      _id: newMsg._id,
-      text,
-      sender: senderId,
-      createdAt: newMsg.createdAt,
-      delivered: false,
-      seen: false,
-    };
-
-    //if user online then execute this block 
-    if (onlineUsers.has(receiverId)) {
-      await Msg.findByIdAndUpdate(newMsg._id, { delivered: true });
-      messageObj.delivered = true;
-      io.to(receiverId).emit("receive_message", messageObj);
-      socket.emit("message_sent", {
-        _id: newMsg._id,
-        text,
-        receiver: receiverId,
-        createdAt: newMsg.createdAt,
-        delivered: true,
-      });
-
-      //if user not chat with sender user so
-      if (userCurrentChat.get(receiverId) !== senderId) {
-        const unreadCount = await Msg.countDocuments({
-          sender: senderId,
-          receiver: receiverId,
-          seen: false,
-        });
-
-        //and receiver user get notification
-        io.to(receiverId).emit("new_message_notification", {
-          from: senderId,
-          count: unreadCount,
-        });
-      }
-    }
-    //if user are not online than thisw block execute  
-    else {
-      socket.emit("message_sent", {
-        _id: newMsg._id,
-        text,
-        receiver: receiverId,
-        createdAt: newMsg.createdAt,
-        delivered: false,
-      });
-    }
   });
-
-  socket.on("mark_delivered", async ({ senderId }) => {
-    const result = await Msg.updateMany(
-      { sender: senderId, receiver: userId, delivered: false },
-      { delivered: true },
-    );
-    if (result.modifiedCount > 0)
-      io.to(senderId).emit("messages_delivered", { by: userId });
-  });
-
-  socket.on("mark_seen", async ({ senderId }) => {
-    const result = await Msg.updateMany(
-      { sender: senderId, receiver: userId, seen: false },
-      { seen: true },
-    );
-    if (result.modifiedCount > 0)
-      io.to(senderId).emit("messages_seen", { by: userId });
-  });
-
   socket.on("disconnect", () => {
-    onlineUsers.delete(userId);
-    userCurrentChat.delete(userId);
-    socket.broadcast.emit("user_offline", userId);
   });
 });
 
