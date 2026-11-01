@@ -11,6 +11,7 @@ const Login_page = () => {
     const onSubmit = async (data) => {
         try {
             const response = await axios.post("https://talksy-09lk.onrender.com/login", data)
+            console.log(response)
             localStorage.setItem("token", response.data.token)
             if (response.status == 200) {
                 Usenagivation("/home");
