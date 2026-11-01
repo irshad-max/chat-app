@@ -24,7 +24,7 @@ function App() {
     const autologin = async () => {
       try {
         const response = await axios.post(
-          "http://localhost:3001/auto/login",
+          "https://talksy-09lk.onrender.com/auto/login",
           {},
           {
             headers: {
