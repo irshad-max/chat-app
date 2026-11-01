@@ -10,7 +10,7 @@ const Reset_page = () => {
     const onSubmit = async (data) => {
         try {
             const response = await axios.post(
-                "http://localhost:3001/reset-password",
+                "https://talksy-09lk.onrender.com/reset-password",
                 {
                     password: data.password
                 },

@@ -19,7 +19,7 @@ const Register_page = () => {
             if (file) {
                 formData.append("profileImage", file)
             }
-            const response = await axios.post("http://localhost:3001/register", formData)
+            const response = await axios.post("https://talksy-09lk.onrender.com/register", formData)
             if (response.status == 200) {
                 Usenagivation("/home");
             }

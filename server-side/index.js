@@ -22,7 +22,7 @@ const Msg = require("./data-base/db-msg--collector");
 const app = express();
 
 // CORS
-const allowedOrigins = "http://localhost:5173";
+const allowedOrigins = "https://talksy-09lk.onrender.com";
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));

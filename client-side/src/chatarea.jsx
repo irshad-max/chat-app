@@ -26,7 +26,7 @@ const ChatArea = () => {
     const getinfo = async () => {
       try {
         const res = await axios.post(
-          "http://localhost:3001/get/user/info",
+          "https://talksy-09lk.onrender.com/get/user/info",
           { id: friendId },
           {
             headers: {
@@ -79,7 +79,7 @@ const ChatArea = () => {
           <img
             src={
               info.profileImage
-                ? `http://localhost:3001${info.profileImage}`
+                ? `https://talksy-09lk.onrender.com${info.profileImage}`
                 : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"
             }
             alt="Profile"

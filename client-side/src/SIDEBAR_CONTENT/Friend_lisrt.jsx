@@ -9,7 +9,7 @@ const Friend_list = () => {
     useEffect(() => {
         const requests = async () => {
             try {
-                const res = await axios.get("http://localhost:3001/friends", {
+                const res = await axios.get("https://talksy-09lk.onrender.com/friends", {
                     headers: {
                         authorization: `bearer ${token}`
                     }
@@ -35,7 +35,7 @@ const Friend_list = () => {
                             <img
                                 src={
                                     request.profileImage ?
-                                    `http://localhost:3001${request?.profileImage}`:
+                                    `https://talksy-09lk.onrender.com${request?.profileImage}`:
                                     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"
                                 }
                                 alt={request?.name || "User"}

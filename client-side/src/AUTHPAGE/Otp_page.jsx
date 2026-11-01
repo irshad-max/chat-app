@@ -11,7 +11,7 @@ const Otp_page = () => {
     //function management
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post("http://localhost:3001/verify-otp", {
+            const response = await axios.post("https://talksy-09lk.onrender.com/verify-otp", {
                 email: email,
                 otp: data.otp
             })
@@ -27,7 +27,7 @@ const Otp_page = () => {
     }
     const resend_otp = async () => {
         try {
-            const response = await axios.post("http://localhost:3001/resend-otp", {
+            const response = await axios.post("https://talksy-09lk.onrender.com/resend-otp", {
                 email: email
             })
             console.log(response.data.otp)

@@ -10,7 +10,7 @@ const SideBar_page = () => {
   useEffect(() => {
     const requests = async () => {
       try {
-        const res = await axios.post("http://localhost:3001/count/request", {}, {
+        const res = await axios.post("https://talksy-09lk.onrender.com/count/request", {}, {
           headers: {
             authorization: `bearer ${token}`
           }
@@ -24,7 +24,7 @@ const SideBar_page = () => {
   }, [token])
   const checkUser = async () => {
     try {
-      const res = await axios.get("http://localhost:3001/api/search",
+      const res = await axios.get("https://talksy-09lk.onrender.com/api/search",
         { params: { text: text } });
       setSeachUser(res.data)
     }
@@ -32,7 +32,7 @@ const SideBar_page = () => {
   }
   const request_btn = async (request_id) => {
     try {
-      const res = await axios.post("http://localhost:3001/request", { receiver: request_id }, {
+      const res = await axios.post("https://talksy-09lk.onrender.com/request", { receiver: request_id }, {
         headers: { authorization: `Bearer ${token}` }
       })
     }

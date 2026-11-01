@@ -10,7 +10,7 @@ const Login_page = () => {
     const Usenagivation = useNavigate();
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post("http://localhost:3001/login", data)
+            const response = await axios.post("https://talksy-09lk.onrender.com/login", data)
             localStorage.setItem("token", response.data.token)
             if (response.status == 200) {
                 Usenagivation("/home");

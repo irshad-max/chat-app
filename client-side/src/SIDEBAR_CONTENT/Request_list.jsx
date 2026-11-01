@@ -8,7 +8,7 @@ const Request_list = () => {
     useEffect(() => {
         const requests = async () => {
             try {
-                const res = await axios.get("http://localhost:3001/request-show", {
+                const res = await axios.get("https://talksy-09lk.onrender.com/request-show", {
                     headers: {
                         authorization: `bearer ${token}`
                     }
@@ -20,17 +20,9 @@ const Request_list = () => {
 
         requests()
     }, [token])
-    // const checkUser = async () => {
-    //     try {
-    //         const res = await axios.get("http://localhost:3001/api/search",
-    //             { params: { text: text } });
-    //         setSeachUser(res.data)
-    //     }
-    //     catch (e) { console.log("error", e) }
-    // }
     const accept_btn = async (request_id) => {
         try {
-            const res = await axios.post(`http://localhost:3001/accept-request/${request_id}`, {})
+            const res = await axios.post(`https://talksy-09lk.onrender.com/accept-request/${request_id}`, {})
             console.log(res)
         }
         catch (e) { console.log("error", e) }

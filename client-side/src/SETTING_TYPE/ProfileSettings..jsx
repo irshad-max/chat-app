@@ -10,7 +10,7 @@ const ProfileSettings = () => {
     useEffect(() => {
         async function getInfo() {
             try {
-                const res = await axios.post("http://localhost:3001/getinfo", {}, {
+                const res = await axios.post("https://talksy-09lk.onrender.com/getinfo", {}, {
                     headers: {
                         Authorization: `bearer ${token}`
                     }
@@ -32,7 +32,7 @@ const ProfileSettings = () => {
             return
         }
         try {
-            const files = await axios.post("http://localhost:3001/profile-image", formdata, {
+            const files = await axios.post("https://talksy-09lk.onrender.com/profile-image", formdata, {
                 headers: {
                     Authorization: `bearer ${token}`
                 }
@@ -47,7 +47,7 @@ const ProfileSettings = () => {
         if (name.trim()) data.name = name;
         if (bio.trim()) data.notes = bio;
         try {
-            const res = await axios.post("http://localhost:3001/write-notes", data, {
+            const res = await axios.post("https://talksy-09lk.onrender.com/write-notes", data, {
                 headers: {
                     Authorization: `bearer ${token}`
                 }
@@ -68,7 +68,7 @@ const ProfileSettings = () => {
                     <div className="profile-preview-content">
                         <img
                             className="profile-preview-avatar"
-                            src={userInfo.profileImage ? `http://localhost:3001${userInfo?.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
+                            src={userInfo.profileImage ? `https://talksy-09lk.onrender.com${userInfo?.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                             alt="Profile preview"
                         />
 
@@ -125,7 +125,7 @@ const ProfileSettings = () => {
                         <div className="profile-photo-controls">
                             <img
                                 className="profile-current-avatar"
-                                src={userInfo.profileImage ? `http://localhost:3001${userInfo?.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
+                                src={userInfo.profileImage ? `https://talksy-09lk.onrender.com${userInfo?.profileImage}` : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqE3e9RIK09-ejpr7BwnvNb4TpTjmXHGgrTTNc00vdtA&s=10"}
                                 alt="Current profile"
                             />
 

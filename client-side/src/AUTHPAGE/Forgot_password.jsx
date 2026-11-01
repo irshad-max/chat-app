@@ -9,7 +9,7 @@ const Forgot_password = () => {
     //function management
     const onSubmit = async (data) => {
         try {
-            const response = await axios.post("http://localhost:3001/verify/email", data)
+            const response = await axios.post("https://talksy-09lk.onrender.com/verify/email", data)
             console.log(response.data.otp)
             if (response.data.otp) {
                 localStorage.setItem("email", data.email)
