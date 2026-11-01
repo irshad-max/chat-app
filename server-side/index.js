@@ -533,27 +533,6 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
   });
 });
-
-// Serve frontend build if exists
-const frontendBuildPath = path.join(__dirname, "../client-side/dist");
-if (fs.existsSync(frontendBuildPath)) {
-  app.use(express.static(frontendBuildPath));
-  app.get("*", (req, res, next) => {
-    if (
-      req.path.startsWith("/api") ||
-      req.path === "/upload-image" ||
-      req.path === "/login" ||
-      req.path === "/register" ||
-      req.path === "/verify-otp" ||
-      req.path === "/resend-otp" ||
-      req.path === "/verify-token" ||
-      req.path.startsWith("/uploads")
-    )
-      return next();
-    res.sendFile(path.join(frontendBuildPath, "index.html"));
-  });
-} else console.log("⚠️ Frontend build not found. API only.");
-
 const PORT = process.env.PORT || 3001;
 connectDB()
   .then(() =>
