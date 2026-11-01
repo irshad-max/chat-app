@@ -163,13 +163,21 @@ app.post("/resend-otp", async (req, res) => {
 
 // =========== LOGIN ROUTES ===========
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(401).json({ error: "Email is wrong" });
-  if (!(await bcrypt.compare(password, user.password)))
-    return res.status(401).json({ error: "Password is wrong" });
-  const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
-  res.status(200).json({ token, name: user.name, profileImage: user.profileImage });
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ error: "Email is wrong" });
+    if (!(await bcrypt.compare(password, user.password)))
+      return res.status(401).json({ error: "Password is wrong" });
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    res.status(200).json({ token, name: user.name, profileImage: user.profileImage });
+  }
+  catch (e) {
+    console.log("Login error:", e);
+    res.status(401).json({
+      message: e.message
+    });
+  }
 });
 
 
