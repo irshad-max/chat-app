@@ -533,6 +533,47 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => {
   });
 });
+
+
+// Serve React frontend
+// Serve React frontend
+const frontendBuildPath = path.resolve(__dirname, "../client-side/dist");
+const indexPath = path.join(frontendBuildPath, "index.html");
+
+console.log("Frontend path:", frontendBuildPath);
+console.log("Dist exists:", fs.existsSync(frontendBuildPath));
+console.log("Index exists:", fs.existsSync(indexPath));
+
+// Static files: JS, CSS, images
+app.use(express.static(frontendBuildPath));
+
+// Explicit root route
+app.get("/", (req, res) => {
+  console.log("Root route called");
+  res.sendFile(indexPath);
+});
+
+// React Router fallback
+app.get("*", (req, res, next) => {
+  if (
+    req.path.startsWith("/api") ||
+    req.path.startsWith("/uploads")
+  ) {
+    return next();
+  }
+
+  res.sendFile(indexPath, (err) => {
+    if (err) next(err);
+  });
+});
+
+app.get("/", (req, res) => {
+  console.log("ROOT ROUTE HIT");
+  res.sendFile(
+    path.join(__dirname, "../client-side/dist/index.html")
+  );
+});
+
 const PORT = process.env.PORT || 3001;
 connectDB()
   .then(() =>
