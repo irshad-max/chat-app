@@ -17,7 +17,8 @@ const Login_page = () => {
                 Usenagivation("/home");
             }
         } catch (error) {
-            console.log(error);
+            console.log("Status:", error.response?.status);
+            console.log("Backend response:", error.response?.data);
         }
     };
     return (
